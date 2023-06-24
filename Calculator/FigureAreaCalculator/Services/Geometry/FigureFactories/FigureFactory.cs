@@ -5,6 +5,8 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
 {
     public abstract class FigureFactory : IFigureFactoryChain
     {
+        protected abstract GeometryType CreatedFiguresType { get; }
+        
         private FigureFactory? _nextFactoryChain;
 
         public void SetNextFactoryChain(in FigureFactory nextFactoryChain)
@@ -18,6 +20,13 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
 
             throw new FigureParamsFormatException();
         }
-        public abstract IFigure GetConcreteFigure(in float[] figureParams);
+        public IFigure GetConcreteFigure(in GeometryType geometryType, in float[] figureParams)
+        {
+            if (geometryType == CreatedFiguresType) return GetConcreteFigure(figureParams);
+
+            if (_nextFactoryChain != null) return _nextFactoryChain.GetConcreteFigure(geometryType, figureParams);
+            throw new FigureParamsFormatException();
+        }
+        protected abstract IFigure GetConcreteFigure(in float[] figureParams);
     }
 }

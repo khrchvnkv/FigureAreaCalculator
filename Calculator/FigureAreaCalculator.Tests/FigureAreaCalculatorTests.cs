@@ -4,7 +4,7 @@ using FigureAreaCalculator.Services.Geometry.Figures;
 
 namespace GeometryTests;
 
-public class GeometryServiceTests
+public class FigureAreaCalculatorTests
 {
     [Test]
     public void WhenIdentifyingFigureWith1Param_ThenReturnCircle()

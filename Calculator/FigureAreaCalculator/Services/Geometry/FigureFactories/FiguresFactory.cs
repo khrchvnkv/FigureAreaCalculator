@@ -5,19 +5,16 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
 {
     public class FiguresFactory
     {
-        private readonly FigureFactory _circleFigureFactory;
-        private readonly FigureFactory _triangleFigureFactory;
-
         private readonly IFigureFactoryChain _factoryChain;
         
         public FiguresFactory()
         {
-            _circleFigureFactory = new CircleFiguresFactory();
-            _triangleFigureFactory = new TriangleFiguresFactory();
+            var circleFigureFactory = new CircleFiguresFactory();
+            var triangleFigureFactory = new TriangleFiguresFactory();
 
             // Setup factory chain
-            _circleFigureFactory.SetNextFactoryChain(_triangleFigureFactory);
-            _factoryChain = _circleFigureFactory;
+            circleFigureFactory.SetNextFactoryChain(triangleFigureFactory);
+            _factoryChain = circleFigureFactory;
         }
         public IFigure CreateFigure(in float[] figureParams)
         {
@@ -32,13 +29,7 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
         {
             if (IsFigureParamsCorrect(figureParams))
             {
-                switch (geometryType)
-                {
-                    case GeometryType.Circle:
-                        return _circleFigureFactory.GetConcreteFigure(figureParams);
-                    case GeometryType.Triangle:
-                        return _triangleFigureFactory.GetConcreteFigure(figureParams);
-                }
+                return _factoryChain.GetConcreteFigure(geometryType, figureParams);
             }
 
             throw new FigureParamsFormatException();

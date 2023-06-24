@@ -5,6 +5,8 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
 {
     public class TriangleFiguresFactory : FigureFactory
     {
+        protected override GeometryType CreatedFiguresType => GeometryType.Triangle;
+
         public override IFigure GetAnyFigure(in float[] figureParams)
         {
             if (TryGetTriangleWithThreeSides(figureParams, out var triangleWithThreeSides))
@@ -13,13 +15,9 @@ namespace FigureAreaCalculator.Services.Geometry.FigureFactories
             }
             return base.GetAnyFigure(figureParams);
         }
-        public override IFigure GetConcreteFigure(in float[] figureParams)
+        protected override IFigure GetConcreteFigure(in float[] figureParams)
         {
-            if (TryGetTriangleWithThreeSides(figureParams, out var triangleWithThreeSides))
-            {
-                return triangleWithThreeSides;
-            }
-
+            if (TryGetTriangleWithThreeSides(figureParams, out var triangle)) return triangle;
             throw new FigureParamsFormatException();
         }
         private bool TryGetTriangleWithThreeSides(in float[] figureParams, out TriangleWithThreeSides triangle)
